@@ -1,3 +1,6 @@
 .claude/
 .DS_Store
 Thumbs.db
+
+# Design source / reference — kept locally, not deployed (Render serves repo root)
+dd-mobile-wireframe.html

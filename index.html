@@ -68,12 +68,26 @@
         <a class="btn btn-gold btn-sm nav-cta" href="https://wa.me/919116538867?text=Hi%20Design%20Dynamo%20—%20we%27d%20like%20to%20send%20a%20test%20brief." target="_blank" rel="noopener">Send a Test Brief</a>
         <button class="nav-burger" id="nav-burger" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
     </div>
+    <!-- Full-screen mobile drawer (wireframe A). display:none on desktop via .nav-mobile;
+         the burger toggles .open. Restructured internals are mobile-only by construction. -->
     <nav class="nav-mobile" id="nav-mobile" aria-label="Mobile">
-        <a href="#system">System</a>
-        <a href="#work">Work</a>
-        <a href="#partners">Partners</a>
-        <a href="#faq">FAQ</a>
-        <a class="btn btn-gold btn-sm" href="https://wa.me/919116538867?text=Hi%20Design%20Dynamo%20—%20we%27d%20like%20to%20send%20a%20test%20brief." target="_blank" rel="noopener">Send a Test Brief</a>
+        <div class="nav-mobile-head">
+            <span class="nav-mobile-brand"><img src="assets/Logo.webp" alt="" width="200" height="200" decoding="async" />Design Dynamo</span>
+            <button class="nav-mobile-close" id="nav-close" aria-label="Close menu">✕</button>
+        </div>
+        <a href="#system">System <small>The pipeline</small></a>
+        <a href="#work">Work <small>Formats</small></a>
+        <a href="#partners">Partners <small>Results</small></a>
+        <a href="#faq">FAQ <small>Details</small></a>
+        <a href="book.html">Book a Call <small>2 min</small></a>
+        <div class="nav-mobile-foot">
+            <a class="btn btn-gold" href="https://wa.me/919116538867?text=Hi%20Design%20Dynamo%20—%20we%27d%20like%20to%20send%20a%20test%20brief." target="_blank" rel="noopener">Send a Test Brief</a>
+            <p class="nav-mobile-contacts">
+                <a href="mailto:studio@thedesigndynamo.com">Email</a> ·
+                <a href="https://wa.me/919116538867" target="_blank" rel="noopener">WhatsApp</a> ·
+                <a href="https://www.instagram.com/the_design_dynamo/" target="_blank" rel="noopener">Instagram</a>
+            </p>
+        </div>
     </nav>
 </header>
 
@@ -91,6 +105,12 @@
         <p class="kicker reveal">White-label video production for marketing agencies</p>
         <h1 class="reveal">The studio behind<br /><em>great agencies.</em></h1>
         <p class="hero-sub reveal">Below-market pricing. Quality your in-house editors can't match. A pipeline that ships up to <strong>8 videos a day</strong> — under your agency's name, never ours.</p>
+        <!-- Scannable proof chips (wireframe C). mobile-only: desktop hero is unchanged. -->
+        <div class="hero-stats mobile-only reveal">
+            <div class="hstat"><b>8/day</b><span>Videos shipped</span></div>
+            <div class="hstat"><b>100%</b><span>White-label</span></div>
+            <div class="hstat"><b>1 day</b><span>Reply time</span></div>
+        </div>
         <div class="hero-actions reveal">
             <a class="btn btn-gold" href="https://wa.me/919116538867?text=Hi%20Design%20Dynamo%20—%20we%27d%20like%20to%20send%20a%20test%20brief." target="_blank" rel="noopener">Send a Test Brief</a>
             <a class="btn btn-line" href="#work">See the Work</a>
@@ -326,17 +346,30 @@
             </article>
         </div>
 
-        <!-- phone-only swipe affordance: without it the strip reads as a single
-             card and the other four stages are never discovered. Hidden ≥901px. -->
-        <div class="engine-nav" id="engine-nav" aria-hidden="true">
-            <div class="engine-dots">
-                <span class="e-dot is-on"></span>
-                <span class="e-dot"></span>
-                <span class="e-dot"></span>
-                <span class="e-dot"></span>
-                <span class="e-dot"></span>
+        <!-- Mobile: the animated pipeline doesn't read on a phone, so it becomes a
+             tap accordion (wireframe E). mobile-only; the desktop #engine above is
+             hidden ≤900px. One panel open at a time, first open by default. -->
+        <div class="engine-acc mobile-only" id="engine-acc">
+            <div class="eacc open">
+                <button class="eacc-head" aria-expanded="true"><span class="eacc-num">01</span><span class="eacc-title">Brief Received</span><span class="eacc-chev" aria-hidden="true">▾</span></button>
+                <div class="eacc-body"><p>We receive your brief, requirements and assets — goals, references, deliverables.</p></div>
             </div>
-            <p class="engine-hint" id="engine-hint">Swipe to follow the job →</p>
+            <div class="eacc">
+                <button class="eacc-head" aria-expanded="false"><span class="eacc-num">02</span><span class="eacc-title">Specialist Assignment</span><span class="eacc-chev" aria-hidden="true">▾</span></button>
+                <div class="eacc-body"><p>Right specialists, right skills — CGI, motion, editing, AI/VFX, typography and sound, assigned to your project.</p></div>
+            </div>
+            <div class="eacc">
+                <button class="eacc-head" aria-expanded="false"><span class="eacc-num">03</span><span class="eacc-title">Production in Progress</span><span class="eacc-chev" aria-hidden="true">▾</span></button>
+                <div class="eacc-body"><p>The team works in parallel to hold speed without compromising quality.</p><div class="eacc-track"><i style="width:64%"></i></div></div>
+            </div>
+            <div class="eacc">
+                <button class="eacc-head" aria-expanded="false"><span class="eacc-num">04</span><span class="eacc-title">Quality Control</span><span class="eacc-chev" aria-hidden="true">▾</span></button>
+                <div class="eacc-body"><p>Every project passes multi-step QC: composition, brand, typography, colour, audio and export.</p></div>
+            </div>
+            <div class="eacc">
+                <button class="eacc-head" aria-expanded="false"><span class="eacc-num">05</span><span class="eacc-title">Delivered Under Your Brand</span><span class="eacc-chev" aria-hidden="true">▾</span></button>
+                <div class="eacc-body"><p>Final files delivered under your agency name. Your clients never see us.</p></div>
+            </div>
         </div>
     </div>
 </section>
@@ -351,7 +384,8 @@
         <div class="chips reveal" id="chips" role="tablist"><!-- chips injected by JS --></div>
         <p class="chip-desc reveal" id="chip-desc"></p>
 
-        <div class="showcase reveal">
+        <!-- Desktop: featured player + thumbnail column. Hidden ≤900px. -->
+        <div class="showcase reveal desktop-only">
             <div class="player-frame" id="player-frame">
                 <video id="featured" preload="metadata" playsinline></video>
                 <button class="player-play" id="player-play" aria-label="Play video">
@@ -360,6 +394,11 @@
             </div>
             <div class="thumbs" id="thumbs"><!-- thumbnails injected by JS --></div>
         </div>
+
+        <!-- Mobile: swipe reel of the active category's videos (wireframe J).
+             Populated by js/design.js from the same WORKS data; chip taps swap it. -->
+        <div class="work-reel mobile-only" id="work-reel"><!-- video cards injected by JS --></div>
+        <div class="reel-cap mobile-only" id="reel-cap"></div>
     </div>
 </section>
 
@@ -379,7 +418,20 @@
         <h2 class="reveal">The middle you've been looking for.</h2>
         <p class="section-sub reveal">You've tried freelancers. You've priced in-house. This is the third option — below average market price, without the management overhead.</p>
 
-        <div class="compare-wrap reveal">
+        <!-- Mobile: the 4-column table can't fit a phone, so it becomes a
+             segmented toggle showing one provider's checklist at a time
+             (wireframe F). Built by js/design.js from the same rows as the
+             table below, which is hidden ≤900px. -->
+        <div class="cmp-mobile mobile-only reveal">
+            <div class="seg" id="cmp-seg" role="tablist">
+                <button class="active" data-col="0" role="tab">Freelancers</button>
+                <button data-col="1" role="tab">Design Dynamo</button>
+                <button data-col="2" role="tab">In-house</button>
+            </div>
+            <div class="cmp-list" id="cmp-list"><!-- rows injected by JS --></div>
+        </div>
+
+        <div class="compare-wrap reveal desktop-only">
             <table class="compare">
                 <thead>
                     <tr><th>Capability</th><th>Freelancers</th><th class="us">Design Dynamo</th><th>In-house team</th></tr>
@@ -539,6 +591,7 @@
                 </ul>
             </article>
         </div>
+        <p class="swipe-hint mobile-only">← swipe for more partners →</p>
     </div>
 </section>
 
@@ -589,6 +642,14 @@
     </div>
     <p class="footer-bar">© 2026 The Design Dynamo. All rights reserved.</p>
 </footer>
+
+<!-- Persistent mobile action dock (wireframe H). Fixed to the viewport; revealed
+     by js/design.js only after the hero scrolls out, so it never doubles the hero
+     CTA. mobile-only. -->
+<div class="dock mobile-only" id="dock" aria-hidden="true">
+    <a class="btn btn-gold" href="https://wa.me/919116538867?text=Hi%20Design%20Dynamo%20—%20we%27d%20like%20to%20send%20a%20test%20brief." target="_blank" rel="noopener">Send a Test Brief</a>
+    <a class="btn btn-line" href="book.html">Book</a>
+</div>
 
 <script src="js/design.js"></script>
 </body>

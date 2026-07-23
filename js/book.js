@@ -174,18 +174,17 @@ window.addEventListener("scroll", () => {
 
 const burger = document.getElementById("nav-burger");
 const navMobile = document.getElementById("nav-mobile");
-burger.addEventListener("click", () => {
-    const open = navMobile.classList.toggle("open");
+const navClose = document.getElementById("nav-close");
+
+function setDrawer(open) {
+    navMobile.classList.toggle("open", open);
     burger.classList.toggle("open", open);
     burger.setAttribute("aria-expanded", open);
-});
-navMobile.querySelectorAll("a").forEach((a) =>
-    a.addEventListener("click", () => {
-        navMobile.classList.remove("open");
-        burger.classList.remove("open");
-        burger.setAttribute("aria-expanded", "false");
-    })
-);
+    document.body.classList.toggle("no-scroll", open);
+}
+burger.addEventListener("click", () => setDrawer(!navMobile.classList.contains("open")));
+if (navClose) navClose.addEventListener("click", () => setDrawer(false));
+navMobile.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => setDrawer(false)));
 
 /* ---------- Scroll reveal ---------- */
 const revealObserver = new IntersectionObserver((entries) => {

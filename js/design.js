@@ -218,18 +218,17 @@ window.addEventListener("scroll", () => {
 
 const burger = document.getElementById("nav-burger");
 const navMobile = document.getElementById("nav-mobile");
-burger.addEventListener("click", () => {
-    const open = navMobile.classList.toggle("open");
+const navClose = document.getElementById("nav-close");
+
+function setDrawer(open) {
+    navMobile.classList.toggle("open", open);
     burger.classList.toggle("open", open);
     burger.setAttribute("aria-expanded", open);
-});
-navMobile.querySelectorAll("a").forEach((a) =>
-    a.addEventListener("click", () => {
-        navMobile.classList.remove("open");
-        burger.classList.remove("open");
-        burger.setAttribute("aria-expanded", "false");
-    })
-);
+    document.body.classList.toggle("no-scroll", open);   // full-screen drawer locks page scroll
+}
+burger.addEventListener("click", () => setDrawer(!navMobile.classList.contains("open")));
+if (navClose) navClose.addEventListener("click", () => setDrawer(false));
+navMobile.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => setDrawer(false)));
 
 /* ---------- Scroll reveal ---------- */
 const revealObserver = new IntersectionObserver((entries) => {
@@ -380,38 +379,132 @@ if (engine && enginePulse) {
 }
 
 
-/* ---------- Engine strip: dots track the swipe (phones only) ----------
-   Driven by scroll position rather than the animation state machine, so the
-   indicator always reflects what the reader is actually looking at.
-*/
-const engineStrip = document.getElementById("engine");
-const engineNav = document.getElementById("engine-nav");
+/* ============================================================
+   MOBILE INTERACTIONS (≤900px)
+   These wire up the mobile-only DOM. On desktop the elements are
+   display:none, but the listeners are harmless — they just never fire
+   because the elements aren't interactive. Everything is defensively
+   guarded so a missing node never throws.
+   ============================================================ */
 
-if (engineStrip && engineNav) {
-    const dots = [...engineNav.querySelectorAll(".e-dot")];
-    const hint = document.getElementById("engine-hint");
-    let hintRetired = false;
-
-    const syncDots = () => {
-        const cards = [...engineStrip.querySelectorAll(".e-card")];
-        if (!cards.length) return;
-        // nearest card centre to the strip's centre wins
-        const mid = engineStrip.scrollLeft + engineStrip.clientWidth / 2;
-        let best = 0, bestGap = Infinity;
-        cards.forEach((card, i) => {
-            const gap = Math.abs(card.offsetLeft + card.offsetWidth / 2 - mid);
-            if (gap < bestGap) { bestGap = gap; best = i; }
+/* ----- E · production engine accordion (one panel open at a time) ----- */
+const engineAcc = document.getElementById("engine-acc");
+if (engineAcc) {
+    const panels = [...engineAcc.querySelectorAll(".eacc")];
+    panels.forEach((panel) => {
+        const head = panel.querySelector(".eacc-head");
+        head.addEventListener("click", () => {
+            const willOpen = !panel.classList.contains("open");
+            panels.forEach((p) => {
+                const on = p === panel && willOpen;
+                p.classList.toggle("open", on);
+                p.querySelector(".eacc-head").setAttribute("aria-expanded", on);
+            });
         });
-        dots.forEach((d, i) => d.classList.toggle("is-on", i === best));
+    });
+}
 
-        if (!hintRetired && engineStrip.scrollLeft > 24) {
-            hintRetired = true;
-            hint.classList.add("gone");
-        }
+/* ----- F · comparison segmented toggle -----
+   One data row per capability, marks in provider order [Freelancers, DD, In-house].
+   Mirrors the desktop table exactly: y = yes, n = no, and a word = qualified. */
+const cmpList = document.getElementById("cmp-list");
+const cmpSeg = document.getElementById("cmp-seg");
+if (cmpList && cmpSeg) {
+    const CMP = [
+        ["Dedicated specialists for every discipline", ["n", "y", "Limited by team"]],
+        ["Structured production workflow",             ["n", "y", "y"]],
+        ["Quality control before delivery",            ["n", "y", "Depends on process"]],
+        ["White-label delivery",                       ["Sometimes", "y", "y"]],
+        ["Scale from 1 to 100+ projects",              ["n", "y", "n"]],
+        ["Consistent turnaround",                      ["Varies", "y", "Capacity dependent"]],
+        ["Single point of contact",                    ["n", "y", "Multiple stakeholders"]],
+        ["No hiring or onboarding",                    ["y", "y", "n"]],
+        ["Predictable project pricing",                ["n", "y", "n"]],
+        ["Client relationship stays with your agency", ["Risk", "y", "y"]],
+    ];
+    const GLYPH = { y: "✓", n: "✕" };
+
+    const renderCmp = (col) => {
+        cmpList.innerHTML = CMP.map(([label, marks]) => {
+            const v = marks[col];
+            const mark = GLYPH[v]
+                ? `<span class="cmp-mark ${v}">${GLYPH[v]}</span>`
+                : `<span class="cmp-mark m">~</span>`;
+            const text = GLYPH[v] ? label : `${label} <span class="lbl">— ${v}</span>`;
+            return `<div class="cmp-row">${mark}<span class="lbl">${text}</span></div>`;
+        }).join("");
     };
+    cmpSeg.querySelectorAll("button").forEach((btn) => {
+        btn.addEventListener("click", () => {
+            cmpSeg.querySelectorAll("button").forEach((b) => b.classList.remove("active"));
+            btn.classList.add("active");
+            renderCmp(+btn.dataset.col);
+        });
+    });
+    renderCmp(0);
+}
 
-    engineStrip.addEventListener("scroll", () => requestAnimationFrame(syncDots), { passive: true });
-    syncDots();
+/* ----- J · work reel (mobile) -----
+   Renders the active category's videos as swipe cards, reusing the same WORKS
+   data and cloud helpers as the desktop showcase. Hooked into selectCategory so
+   chip taps swap both views. Tap a card to play it inline. */
+const workReel = document.getElementById("work-reel");
+const reelCap = document.getElementById("reel-cap");
+function renderWorkReel(catId) {
+    if (!workReel) return;
+    const cat = CATEGORIES.find((c) => c.id === catId);
+    const works = WORKS.filter((w) => w.category === catId);
+    if (!cat || !works.length) return;
+
+    workReel.innerHTML = works.map((w) => `
+        <div class="wcard">
+            <div class="wthumb ${w.orientation === "landscape" ? "landscape" : ""}">
+                <video muted playsinline ${videoAttrs(w)} src="${cloudSrc(w)}"></video>
+                <span class="wplay">▶</span>
+            </div>
+            <div class="wtitle">${w.title}</div>
+            <div class="wsub">${cat.label}</div>
+        </div>`).join("");
+
+    workReel.querySelectorAll(".wthumb").forEach((thumb) => {
+        const v = thumb.querySelector("video");
+        thumb.addEventListener("click", () => {
+            if (v.paused) {
+                v.muted = false; v.controls = true; v.play().catch(() => {});
+                thumb.classList.add("playing");
+            } else { v.pause(); }
+        });
+        v.addEventListener("pause", () => thumb.classList.remove("playing"));
+        v.addEventListener("play", () => thumb.classList.add("playing"));
+    });
+    workReel.scrollLeft = 0;
+
+    if (reelCap) {
+        reelCap.innerHTML = `<b>${cat.label}</b> · ${works.length} videos` +
+            `<span class="dots">${works.map((_, k) => `<i class="${k === 0 ? "on" : ""}"></i>`).join("")}</span>`;
+        const dots = [...reelCap.querySelectorAll(".dots i")];
+        workReel.onscroll = () => {
+            const i = Math.round(workReel.scrollLeft / (workReel.scrollWidth / works.length));
+            dots.forEach((d, k) => d.classList.toggle("on", k === Math.min(i, works.length - 1)));
+        };
+    }
+}
+// keep the reel in sync with the shared category selection
+const _selectCategory = selectCategory;
+selectCategory = function (catId, preferredWork) {
+    _selectCategory(catId, preferredWork);
+    renderWorkReel(catId);
+};
+renderWorkReel(CATEGORIES[0].id);
+
+/* ----- H · sticky action dock: reveal only after the hero scrolls away ----- */
+const dock = document.getElementById("dock");
+const heroTop = document.querySelector(".hero-top");
+if (dock && heroTop && "IntersectionObserver" in window) {
+    new IntersectionObserver(([entry]) => {
+        dock.classList.toggle("show", !entry.isIntersecting);
+        dock.setAttribute("aria-hidden", entry.isIntersecting);
+    }, { threshold: 0 }).observe(heroTop);
 }
 
 

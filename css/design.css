@@ -456,79 +456,8 @@ h1 em, h2 em {
 .compare tbody .us { border-left: 1px solid var(--gold); border-right: 1px solid var(--gold); }
 .compare tbody tr:last-child .us { border-bottom: 1px solid var(--gold); border-radius: 0 0 var(--r) var(--r); }
 
-/* ---------- Comparison — phones: stacked capability cards ----------
-   A 640px table on a ~360px screen either scrolls sideways (awkward) or
-   crams (clutter). Below 760px the SAME markup re-flows: each capability
-   row becomes a card — title on top, the three verdicts in equal columns
-   under it — and the provider names live in one sticky legend instead of
-   being repeated. The gold Design Dynamo rail still runs down the middle. */
-@media (max-width: 760px) {
-    .compare-wrap { overflow: visible; }        /* sticky legend needs the page scroller */
-    .compare, .compare tbody { display: block; min-width: 0; }
-
-    /* legend: three column names, pinned under the nav while cards scroll */
-    .compare thead {
-        display: block;
-        position: sticky;
-        top: var(--nav-h);
-        z-index: 5;
-        margin-bottom: 1rem;
-        background: #08080b;                    /* section-tint backdrop */
-    }
-    .compare thead tr { display: grid; grid-template-columns: repeat(3, 1fr); }
-    .compare thead th:first-child { display: none; }   /* "Capability" is each card's title */
-    /* :not(:first-child) beats a bare `.compare th` — media queries add no
-       specificity, so the desktop 21% must be overridden at equal weight */
-    .compare thead th:not(:first-child),
-    .compare tbody td:not(:first-child) { width: auto; }
-    .compare thead th {
-        padding: 0.75rem 0.3rem 0.6rem;
-        display: flex;
-        align-items: flex-end;
-        justify-content: center;
-        text-align: center;
-        font-size: 0.62rem;
-        letter-spacing: 0.05em;
-        line-height: 1.35;
-        border-bottom: 1px solid var(--border-strong);
-    }
-    .compare thead .us {
-        border: none;
-        border-bottom: 2px solid var(--gold);
-        border-radius: 0;
-        background: transparent;
-        font-size: 0.82rem;
-    }
-
-    /* one card per capability */
-    .compare tbody tr {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        border: 1px solid var(--border);
-        border-radius: var(--r);
-        margin-bottom: 0.7rem;
-        overflow: hidden;                       /* clips the gold rail to the card radius */
-    }
-    .compare td {
-        width: auto;
-        border-bottom: none;
-        padding: 0.85rem 0.35rem;
-        display: grid;
-        place-items: center;
-        align-content: center;
-    }
-    .compare td:first-child {
-        grid-column: 1 / -1;
-        display: block;
-        min-width: 0;
-        padding: 0.85rem 1rem 0.7rem;
-        border-bottom: 1px dashed var(--border);
-        font-size: 0.88rem;
-    }
-    .compare tbody tr:last-child .us { border-bottom: none; border-radius: 0; }
-    .mk-word { font-size: 0.76rem; line-height: 1.4; }
-    .mk-note { white-space: normal; }   /* nowrap could push past a 111px column */
-}
+/* The phone comparison is now a segmented toggle (.cmp-mobile), built in the
+   mobile-redesign block at the end of this file; the table is hidden ≤900px. */
 
 /* ---------- Production System · the engine (one job, live) ----------
    Five-stage run: Brief → Specialists → Production → QC → Delivered.
@@ -914,10 +843,6 @@ h1 em, h2 em {
     .e-card { transition: none; }
 }
 
-
-/* swipe affordance for the phone strip — desktop shows all five at once */
-.engine-nav { display: none; }
-
 /* ---------- White-label statement ---------- */
 .whitelabel { padding: 9rem 0; }
 .wl-statement {
@@ -1277,96 +1202,173 @@ h1 em, h2 em {
     .js .reveal { opacity: 1; transform: none; transition: none; }
 }
 
-/* ---------- Responsive ---------- */
+/* ---------- Mobile / desktop visibility ----------
+   Mobile-only DOM is hidden by default; the ≤900px block below reveals each
+   piece with its correct display and hides the desktop equivalents. Above
+   901px only this one rule applies, so the desktop render path is untouched. */
+.mobile-only { display: none; }
+
+/* ============================================================
+   MOBILE REDESIGN (≤900px) — per dd-mobile-wireframe.html
+   Desktop (≥901px) is unaffected: everything lives in the query,
+   and .mobile-only blocks stay display:none above it.
+   ============================================================ */
 @media (max-width: 900px) {
+    .desktop-only { display: none; }
+
+    /* ----- shared shell ----- */
     .nav-links, .nav-cta { display: none; }
     .nav-burger { display: flex; }
-    .section { padding: 5rem 0; }
-    .hero-top { min-height: 0; padding: calc(var(--nav-h) + 4rem) 0 3rem; display: block; }
-    .hero-partners { position: static; margin-top: 3rem; }
-    /* tighter logos so 7 marks wrap into a tidy 2–3 rows, not a long string */
-    .trustbar-logos { gap: 1.1rem 1.5rem; }
-    .logo-item { height: 21px; max-width: 88px; }
-    .logo-item.logo-tall { height: 27px; max-width: 46px; }
-    .showcase { flex-direction: column; align-items: stretch; }
-    .player-frame { width: 100%; }
-    .player-frame.landscape { width: 100%; }
-    .thumbs { flex-direction: row; max-height: none; overflow-x: auto; }
-    /* phones: five stacked cards ≈ 2200px of scrolling — people bail. Same
-       snap-strip as the 901–1320 tablet band instead: one card tall, swipe
-       through the stages, next card peeking in as the affordance. Cards still
-       animate one by one as they're swiped into view. */
-    .engine {
-        grid-template-columns: none;
-        grid-auto-flow: column;
-        grid-auto-columns: min(272px, 80vw);
-        overflow-x: auto;
-        /* overflow-x:auto forces overflow-y to compute to auto, so this strip
-           clips vertically too. The .e-flag pill sits 13px above the card —
-           padding-top must clear it or the flag gets cut off. */
-        padding: 1.4rem 2px 1rem;
-        scroll-snap-type: x mandatory;
-        -webkit-overflow-scrolling: touch;
-    }
-    .e-card { min-height: 0; scroll-snap-align: center; }
-    .engine-nav {
+    .section { padding: 4.5rem 0; }
+    h1, h2, h3 { text-wrap: balance; }
+    .engine-sub, .e-caption, .section-sub, .chip-desc,
+    .hero-sub, .story-text, .story-beat p { text-wrap: pretty; }
+
+    /* ----- A/B · full-screen nav drawer ----- */
+    .nav-mobile {
+        position: fixed;
+        inset: 0;
+        z-index: 200;
         display: flex;
         flex-direction: column;
-        align-items: center;
-        gap: 0.85rem;
-        margin-top: 0.4rem;
+        gap: 0;
+        padding: 1.1rem var(--edge) calc(1.4rem + env(safe-area-inset-bottom));
+        background: var(--bg);
+        border: none;
+        overflow-y: auto;
+        transform: translateY(-100%);
+        visibility: hidden;
+        transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1), visibility 0s linear 0.32s;
     }
-    .engine-dots { display: flex; gap: 0.45rem; }
-    .e-dot {
-        width: 6px; height: 6px;
-        border-radius: 999px;
-        background: var(--border-strong);
-        transition: background 0.25s ease, width 0.25s ease;
+    .nav-mobile.open { transform: translateY(0); visibility: visible; transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1), visibility 0s; }
+    .nav-mobile-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+    .nav-mobile-brand { display: flex; align-items: center; gap: 0.55rem; font-family: var(--font-display); font-weight: 700; font-size: 1.02rem; }
+    .nav-mobile-brand img { width: 22px; height: 22px; }
+    .nav-mobile-close { width: 42px; height: 42px; border: 1px solid var(--border); border-radius: 11px; background: var(--surface); color: var(--text); font-size: 1.05rem; line-height: 1; cursor: pointer; }
+    .nav-mobile > a {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 1.05rem 0.2rem;
+        border-bottom: 1px solid var(--border);
+        font-family: var(--font-display); font-size: 1.45rem; font-weight: 600;
+        letter-spacing: -0.01em; text-transform: none; color: var(--text);
     }
-    .e-dot.is-on { width: 20px; background: var(--gold); }
-    .engine-hint {
-        font-family: var(--font-mono);
-        font-size: 0.66rem;
-        text-transform: uppercase;
-        letter-spacing: 0.1em;
-        color: var(--faint);
-        transition: opacity 0.4s ease;
+    .nav-mobile > a small { font-family: var(--font-mono); color: var(--muted); font-size: 0.72rem; font-weight: 400; letter-spacing: 0.02em; }
+    .nav-mobile > a:hover { color: var(--gold); }
+    .nav-mobile-foot { margin-top: auto; padding-top: 1.8rem; display: flex; flex-direction: column; gap: 0.9rem; }
+    .nav-mobile-foot .btn { width: 100%; justify-content: center; font-size: 0.82rem; }
+    .nav-mobile-contacts { text-align: center; font-family: var(--font-mono); font-size: 0.72rem; color: var(--muted); }
+    .nav-mobile-contacts a { display: inline; padding: 0; border: none; font: inherit; color: var(--muted); text-transform: none; }
+    .nav-mobile-contacts a:hover { color: var(--gold); }
+    body.no-scroll { overflow: hidden; }
+
+    /* ----- hero ----- */
+    .hero-top { min-height: 0; padding: calc(var(--nav-h) + 3.5rem) 0 3rem; display: block; }
+    .hero-inner h1 { max-width: 100%; }
+    /* C · scannable proof chips over the video */
+    .hero-stats { display: flex; gap: 0.55rem; margin: 2rem 0 0; }
+    .hstat { flex: 1; background: rgba(13, 14, 18, 0.62); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); border: 1px solid var(--border-strong); border-radius: 13px; padding: 0.8rem 0.5rem; text-align: center; }
+    .hstat b { display: block; font-family: var(--font-display); font-size: 1.3rem; font-weight: 700; color: var(--gold); letter-spacing: -0.02em; }
+    .hstat span { display: block; font-size: 0.64rem; color: var(--muted); margin-top: 0.25rem; line-height: 1.3; }
+    .hero-actions { display: flex; gap: 0.6rem; }
+    .hero-actions .btn { flex: 1; padding: 0.9rem 0.5rem; font-size: 0.76rem; }
+
+    /* ----- D · logos: one horizontal swipe strip ----- */
+    .hero-partners { position: static; margin-top: 2.8rem; }
+    .trustbar-logos {
+        flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch;
+        scrollbar-width: none; gap: 1.5rem; padding-bottom: 6px;
     }
-    .engine-hint.gone { opacity: 0; }   /* retires once they've swiped */
-    /* booking: single column, aside drops below the form and stops sticking */
+    .trustbar-logos::-webkit-scrollbar { display: none; }
+    .logo-item { flex: 0 0 auto; height: 24px; max-width: none; }
+    .logo-item.logo-tall { height: 30px; }
+
+    /* ----- E · production engine → tap accordion ----- */
+    #engine, .engine-meta, .engine-pulse { display: none; }   /* hide the desktop animated pipeline */
+    .engine-header { text-align: left; }
+    .engine-acc { display: flex; flex-direction: column; gap: 0.7rem; margin-top: 1.7rem; }
+    .eacc { border: 1px solid var(--border); border-radius: 14px; background: var(--surface); overflow: hidden; }
+    .eacc-head { display: flex; align-items: center; gap: 0.8rem; width: 100%; padding: 1rem 0.95rem; background: none; border: none; cursor: pointer; text-align: left; color: var(--text); }
+    .eacc-num { flex: 0 0 auto; width: 30px; height: 30px; border-radius: 9px; background: rgba(227, 197, 102, 0.14); color: var(--gold); font-family: var(--font-mono); font-weight: 700; font-size: 0.78rem; display: flex; align-items: center; justify-content: center; }
+    .eacc-title { flex: 1; font-family: var(--font-display); font-size: 0.98rem; font-weight: 600; }
+    .eacc-chev { color: var(--muted); font-size: 0.8rem; transition: transform 0.25s ease; }
+    .eacc.open .eacc-chev { transform: rotate(180deg); }
+    .eacc-body { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+    .eacc.open .eacc-body { max-height: 240px; }
+    .eacc-body p { padding: 0 0.95rem 1rem 3.4rem; color: var(--muted); font-size: 0.86rem; line-height: 1.55; }
+    .eacc-track { height: 3px; background: #242219; border-radius: 3px; margin: 0 0.95rem 1rem 3.4rem; overflow: hidden; }
+    .eacc-track i { display: block; height: 100%; background: var(--gold); border-radius: 3px; }
+
+    /* ----- J · work: pill chips + swipe reel ----- */
+    .chips { flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; gap: 0.5rem 0.6rem; margin-top: 1.6rem; padding-bottom: 4px; }
+    .chips::-webkit-scrollbar { display: none; }
+    .chip { flex: 0 0 auto; padding: 0.6rem 1rem; border: 1px solid var(--border); border-bottom: 1px solid var(--border); border-radius: 999px; background: var(--surface); color: var(--muted); }
+    .chip.active { background: var(--gold); color: var(--gold-ink); border-color: var(--gold); }
+    .chip.active::after { display: none; }
+    .work-reel { display: flex; gap: 0.8rem; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; padding: 1.1rem 0 0.4rem; }
+    .work-reel::-webkit-scrollbar { display: none; }
+    .wcard { flex: 0 0 78%; scroll-snap-align: start; }
+    .wthumb { position: relative; width: 100%; aspect-ratio: 9 / 16; border-radius: 14px; overflow: hidden; border: 1px solid var(--border); background: var(--surface); }
+    .wthumb.landscape { aspect-ratio: 16 / 9; }
+    .wthumb video { width: 100%; height: 100%; object-fit: cover; }
+    .wplay { position: absolute; inset: 0; margin: auto; width: 46px; height: 46px; border-radius: 50%; background: rgba(201, 162, 75, 0.18); border: 1px solid var(--gold); color: var(--gold); display: flex; align-items: center; justify-content: center; font-size: 0.9rem; padding-left: 3px; transition: opacity 0.2s ease; }
+    .wthumb.playing .wplay { opacity: 0; pointer-events: none; }
+    .wtitle { font-size: 0.82rem; font-weight: 600; margin-top: 0.6rem; }
+    .wsub { font-size: 0.72rem; color: var(--muted); margin-top: 0.15rem; }
+    .reel-cap { display: flex; align-items: center; gap: 0.5rem; font-size: 0.74rem; color: var(--muted); margin-top: 0.4rem; }
+    .reel-cap b { color: var(--text); }
+    .reel-cap .dots { display: flex; gap: 0.32rem; margin-left: auto; }
+    .reel-cap .dots i { width: 5px; height: 5px; border-radius: 50%; background: rgba(51, 48, 38, 0.7); }
+    .reel-cap .dots i.on { background: var(--gold); }
+
+    /* ----- white-label ----- */
+    .whitelabel { padding: 5rem 0; }
+
+    /* ----- F · comparison → segmented toggle ----- */
+    .cmp-mobile { display: block; margin-top: 1.8rem; }
+    .seg { display: flex; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 4px; gap: 4px; }
+    .seg button { flex: 1; padding: 0.65rem 0.3rem; border: none; background: none; color: var(--muted); font-family: var(--font-mono); font-size: 0.7rem; font-weight: 600; border-radius: 9px; cursor: pointer; letter-spacing: 0.01em; }
+    .seg button.active { background: var(--gold); color: var(--gold-ink); }
+    .cmp-list { margin-top: 1rem; }
+    .cmp-row { display: flex; align-items: center; gap: 0.8rem; padding: 0.85rem 0.2rem; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+    .cmp-mark { flex: 0 0 auto; width: 22px; text-align: center; font-weight: 700; }
+    .cmp-mark.y { color: #7fae6b; }
+    .cmp-mark.n { color: #a86a63; }
+    .cmp-mark.m { color: var(--gold); }
+    .cmp-row .lbl { color: #c8c2b6; }
+
+    /* ----- partners: horizontal swipe cards ----- */
+    .stories { display: flex; grid-template-columns: none; gap: 0.9rem; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; padding-bottom: 0.4rem; }
+    .stories::-webkit-scrollbar { display: none; }
+    .story { flex: 0 0 87%; scroll-snap-align: center; }
+    .swipe-hint { display: block; text-align: center; font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.06em; color: var(--faint); margin-top: 0.9rem; }
+
+    /* ----- H · sticky action dock ----- */
+    .dock {
+        position: fixed; left: 0; right: 0; bottom: 0; z-index: 150;
+        display: flex; gap: 0.6rem;
+        padding: 0.7rem 0.9rem calc(0.8rem + env(safe-area-inset-bottom));
+        background: linear-gradient(to top, var(--bg) 62%, rgba(5, 5, 6, 0));
+        transform: translateY(130%);
+        transition: transform 0.3s ease;
+    }
+    .dock.show { transform: translateY(0); }
+    .dock .btn { padding: 0.9rem; }
+    .dock .btn-gold { flex: 2; }
+    .dock .btn-line { flex: 1; }
+    .footer { padding-bottom: 6.5rem; }   /* clear the dock */
+
+    /* ----- footer ----- */
+    .footer-inner { justify-content: center; text-align: center; }
+    .footer-links { margin-left: 0; gap: 0.35rem 1.6rem; }
+    .footer-links a { padding: 0.55rem 0; }
+
+    /* ----- booking page (book.html) ----- */
     .book-grid { grid-template-columns: 1fr; }
     .book-aside { position: static; }
     .field-row { grid-template-columns: 1fr; }
     .book-form { padding: 1.8rem 1.4rem; }
     .page-book .book-section { padding-top: calc(var(--nav-h) + 3rem); }
-    /* iOS Safari zooms the whole page when a focused control is under 16px,
-       and never zooms back out — 1rem exactly is the threshold */
+    /* iOS Safari zooms the page when a focused control is under 16px and never
+       zooms back — 1rem exactly is the threshold */
     .field input, .field textarea, .field select { font-size: 1rem; }
-    /* the connector rail is horizontal — it applies again now that the phone
-       layout is a strip, not a stack (it only had to go when cards stacked) */
-    .engine-pulse { display: none; }   /* pulse rides absolute coords; strip scrolls out from under it */
-    .engine-meta { justify-content: center; }
-    .whitelabel { padding: 5.5rem 0; }
-
-    /* ----- phone touch + legibility passes -----
-       Thumb-friendly hit areas and a floor under the engine's micro-labels,
-       which sat at 8–8.6px. Desktop keeps its original scale. */
-    .chips { gap: 0.4rem 1.6rem; }
-    .chip { padding: 0.7rem 0; }                     /* 29px tall -> 44px */
-    .footer-links { gap: 0.35rem 1.6rem; }
-    .footer-links a { padding: 0.55rem 0; }          /* 20px tall -> 38px */
-    .doc-title { font-size: 0.62rem; }               /* "Project Brief", was 8.0px */
-    .mini-head { font-size: 0.66rem; }               /* "Discipline"/"Status", was 8.6px */
-    .spec-pill { font-size: 0.64rem; }               /* "Assigned", was 8.3px */
-    .qc-pass { font-size: 0.64rem; }                 /* "Pass", was 9.0px */
-    .doc-row { font-size: 0.64rem; }                 /* "Goals"/"Assets", was 9.0px */
-    .thumb-label { font-size: 0.64rem; }             /* work thumb captions, was 9.0px */
-    .mk-note { font-size: 0.62rem; }                 /* "always"/"guaranteed", was 9.3px */
-    /* narrow columns strand single words on the last line — balance headings,
-       and let body copy pull a word down rather than leave an orphan */
-    h1, h2, h3 { text-wrap: balance; }
-    .engine-sub, .e-caption, .section-sub, .chip-desc,
-    .hero-sub, .story-text, .story-beat p { text-wrap: pretty; }
-    .footer-inner { justify-content: center; text-align: center; }
-    .footer-links { margin-left: 0; }
 }

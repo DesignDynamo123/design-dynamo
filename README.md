@@ -47,11 +47,20 @@ Serve the site on **one** hostname and redirect the other. The canonical tag,
 (no `www`), so make the bare domain the primary and redirect `www` to it —
 otherwise search engines see two copies of the same site.
 
-### Not part of the deploy
+### Everything in this repo is public
 
-`apps-script/` is the Google-side source. It runs on Google's servers; serving
-it publicly would expose the spreadsheet ID for no benefit. Harmless to leave
-in the repo, but don't link to it.
+Render publishes the repo root, so **every file here is fetchable** —
+`README.md`, `render.yaml`, `.gitignore` and `apps-script/Code.gs` all return
+200 on the live site. There is no ignore mechanism for a static site; the only
+reliable rule is: if it must stay private, it does not belong in this repo.
+
+That is why `apps-script/Code.gs` carries no spreadsheet ID. Bound to its sheet
+via Extensions -> Apps Script, the script reaches it with
+`getActiveSpreadsheet()` and needs no ID at all.
+
+The Apps Script `/exec` URL in `js/book.js` is necessarily public — the browser
+has to call it. That is safe: it only accepts a POST that appends a row, and
+grants no read access to the sheet.
 
 The videos aren't here either — they stream from Cloudinary (cloud
 `dfvot5men`), configured at the top of `js/design.js`.

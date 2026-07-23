@@ -6,12 +6,14 @@
 document.documentElement.classList.add("js");
 
 /* ------------------------------------------------------------------
-   BACKEND — paste the Apps Script Web App /exec URL here.
+   BACKEND — the Apps Script Web App /exec URL.
 
-   It writes to the client-meetings sheet:
-   https://docs.google.com/spreadsheets/d/1mD5RBf64xNOJUKjZRl1oOpWJFbn8fBRcrn8MtKF_B5Y/edit
+   This file ships to the browser, so this URL is necessarily public.
+   That is fine: it only accepts a POST and appends a row. It grants no
+   read access to the sheet, and the sheet ID is deliberately not
+   recorded anywhere in this repo.
 
-   Full setup steps are in the header of apps-script/Code.gs.
+   Setup steps are in the header of apps-script/Code.gs.
    While this is empty the form still validates, then points the
    visitor at WhatsApp instead of pretending the booking was saved.
 ------------------------------------------------------------------ */

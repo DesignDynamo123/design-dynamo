@@ -3,11 +3,11 @@
  *
  * Receives a POST from book.html and appends one row per booking.
  *
- * Target sheet:
- * https://docs.google.com/spreadsheets/d/1mD5RBf64xNOJUKjZRl1oOpWJFbn8fBRcrn8MtKF_B5Y/edit
+ * Writes to the client-meetings sheet. The sheet URL is intentionally not
+ * recorded here — see SPREADSHEET_ID below.
  *
  * SETUP (once)
- * 1. Open that sheet → Extensions → Apps Script. Delete the starter code, paste this file.
+ * 1. Open the sheet → Extensions → Apps Script. Delete the starter code, paste this file.
  * 2. In the toolbar dropdown pick `setupSheet` → Run.
  *    Google asks for permission the first time — approve it.
  *    This creates the "Bookings" tab, writes the header row, and formats the
@@ -24,8 +24,18 @@
  * → Version: New version → Deploy. Saving alone does not update the live URL.
  */
 
-/** The client-meetings sheet. Leave as-is when the script is bound to that sheet. */
-var SPREADSHEET_ID = "1mD5RBf64xNOJUKjZRl1oOpWJFbn8fBRcrn8MtKF_B5Y";
+/**
+ * Leave EMPTY when the script is bound to the sheet — i.e. you opened it via
+ * Extensions -> Apps Script from the spreadsheet itself, which is the setup
+ * described above. Bound scripts reach their own sheet through
+ * getActiveSpreadsheet(), so no ID is needed.
+ *
+ * Deliberately not hardcoded: this repo is the deploy source for the site, and
+ * the host serves every file in it, so anything written here is public. Only
+ * fill this in if you run the script standalone, and if you do, keep that copy
+ * out of the repo.
+ */
+var SPREADSHEET_ID = "";
 
 /** Tab the bookings land in — created automatically if it doesn't exist. */
 var SHEET_NAME = "Bookings";

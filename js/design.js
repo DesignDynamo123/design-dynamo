@@ -36,6 +36,42 @@ function videoAttrs(work) {
         : `preload="metadata"`;
 }
 
+/* ---------- Hero background video ----------
+   Two cuts on Cloudinary: `mbg` framed for phones, `lbg` for wider screens.
+   The <video> ships with no <source> children, so nothing downloads until this
+   picks one — that's the point, otherwise a phone would fetch the desktop cut
+   before any swap could happen. (A `media` attribute on <source> only works
+   inside <picture>; <video> ignores it.)
+
+   Resolved once at load. Re-resolving on resize would restart playback
+   mid-scroll for a case — a desktop window dragged narrow — that isn't worth it.
+*/
+const HERO_CUTS = { mobile: "mbg", wide: "lbg" };
+const heroVideo = document.querySelector(".hero-video");
+
+if (heroVideo) {
+    const cut = window.matchMedia("(max-width: 900px)").matches
+        ? HERO_CUTS.mobile
+        : HERO_CUTS.wide;
+
+    // mp4 first, matching the original markup: browsers take the first they support
+    ["mp4", "webm"].forEach((ext) => {
+        const source = document.createElement("source");
+        source.src = `${CLOUD_BASE}${cut}.${ext}`;
+        source.type = `video/${ext}`;
+        heroVideo.appendChild(source);
+    });
+
+    heroVideo.load();   // required: the element had no sources when it was parsed
+
+    // load() restarts resource selection, so nudge playback rather than trusting
+    // the autoplay attribute to re-fire. Rejection is expected and fine — a
+    // blocked autoplay just leaves the poster showing, which is the same frame.
+    const attempt = heroVideo.play();
+    if (attempt) attempt.catch(() => {});
+}
+
+
 /* ---------- Portfolio data ----------
    Fully dynamic: add as many videos per category as you like —
    chips, thumbnails and the filmstrip all render from this list.

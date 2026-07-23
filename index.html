@@ -80,10 +80,12 @@
 <!-- ============ 2 · HERO ============ -->
 <section class="hero" id="top">
     <div class="hero-top">
-        <video class="hero-video" autoplay muted loop playsinline poster="assets/bg.webp">
-            <source src="https://res.cloudinary.com/dfvot5men/video/upload/lbg.mp4" type="video/mp4" />
-            <source src="https://res.cloudinary.com/dfvot5men/video/upload/lbg.webm" type="video/webm" />
-        </video>
+        <!-- Sources are injected by js/design.js, not declared here, so the browser
+             downloads only the cut that matches: mbg on phones, lbg elsewhere.
+             A `media` attribute on <source> works in <picture> but is not honoured
+             inside <video>, so this has to be done in script. With JS off the
+             poster stands in — it is the same frame. -->
+        <video class="hero-video" autoplay muted loop playsinline poster="assets/bg.webp"></video>
         <div class="hero-shade"></div>
         <div class="hero-inner">
         <p class="kicker reveal">White-label video production for marketing agencies</p>

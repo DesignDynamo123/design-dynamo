@@ -1,0 +1,52 @@
+# Render blueprint — static site, no build step.
+#
+# IMPORTANT: this must be a Render "Static Site", not a "Web Service".
+# Free Web Services sleep after 15 minutes idle and take 30-60s to wake;
+# free Static Sites never sleep and are served from Render's CDN.
+#
+# If Render rejects any field below (the schema does shift), you can delete
+# this file entirely and set the same three things in the dashboard:
+#   Build Command:    (leave empty)
+#   Publish Directory: .
+#   Headers:          as listed below
+
+services:
+  - type: web
+    name: design-dynamo
+    runtime: static
+    buildCommand: ""
+    staticPublishPath: .
+    pullRequestPreviewsEnabled: false
+
+    headers:
+      # Images change rarely — let repeat visits skip the network entirely.
+      - path: /assets/*
+        name: Cache-Control
+        value: public, max-age=2592000
+
+      # Styles and scripts are cached for a day. They have no content hash in
+      # the filename, so this is the trade: a day of fast repeat loads against
+      # a day before an edit reaches someone who already visited. To publish a
+      # change immediately, bump the query string in the HTML
+      # (css/design.css?v=2) — that is a new URL, so caches miss and refetch.
+      - path: /css/*
+        name: Cache-Control
+        value: public, max-age=86400
+      - path: /js/*
+        name: Cache-Control
+        value: public, max-age=86400
+
+      # HTML always revalidates: a 304 is a few hundred bytes, and it means
+      # content edits are live on the next reload rather than a day later.
+      - path: /*.html
+        name: Cache-Control
+        value: public, max-age=0, must-revalidate
+
+      # Modest hardening. No CSP here — the page loads Google Fonts and posts
+      # to Apps Script, so a wrong policy would break the booking form.
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /*
+        name: Referrer-Policy
+        value: strict-origin-when-cross-origin

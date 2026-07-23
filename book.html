@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Book a Call — Design Dynamo</title>
+<meta name="description" content="Book a call with Design Dynamo — the white-label video production studio behind great agencies. Tell us about your company and we'll get back within one business day." />
+<meta name="robots" content="noindex, follow" />
+
+<link rel="icon" type="image/png" href="assets/favicon.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Instrument+Serif:ital@1&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/design.css" />
+</head>
+<body class="page-book">
+
+<!-- ============ NAV ============ -->
+<header class="nav scrolled" id="nav">
+    <div class="nav-inner">
+        <a href="index.html#top" class="brand">
+            <img src="assets/Logo.webp" alt="Design Dynamo" class="brand-mark" width="200" height="200" decoding="async" />
+            <span class="brand-name">Design Dynamo</span>
+        </a>
+        <nav class="nav-links" aria-label="Main">
+            <a href="index.html#system">System</a>
+            <a href="index.html#work">Work</a>
+            <a href="index.html#partners">Partners</a>
+            <a href="index.html#faq">FAQ</a>
+        </nav>
+        <a class="btn btn-line btn-sm nav-cta" href="index.html#top">← Back to site</a>
+        <button class="nav-burger" id="nav-burger" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+    <nav class="nav-mobile" id="nav-mobile" aria-label="Mobile">
+        <a href="index.html#system">System</a>
+        <a href="index.html#work">Work</a>
+        <a href="index.html#partners">Partners</a>
+        <a href="index.html#faq">FAQ</a>
+        <a class="btn btn-line btn-sm" href="index.html#top">← Back to site</a>
+    </nav>
+</header>
+
+<!-- ============ BOOKING ============ -->
+<section class="section book-section">
+    <div class="container">
+        <p class="kicker reveal">Book a call</p>
+        <h2 class="reveal">Tell us about your <em>company.</em></h2>
+        <p class="section-sub reveal">A few details so the first call is useful, not introductory. We reply within one business day.</p>
+
+        <div class="book-grid">
+            <!-- ---- form ---- -->
+            <form class="book-form reveal" id="book-form" novalidate>
+                <div class="field">
+                    <label for="company">Company name <span class="req">*</span></label>
+                    <input type="text" id="company" name="company" autocomplete="organization" required />
+                    <p class="field-error" data-error-for="company"></p>
+                </div>
+
+                <div class="field">
+                    <label for="brief">A brief about the company <span class="req">*</span></label>
+                    <textarea id="brief" name="brief" rows="5" required
+                        placeholder="What you do, who your clients are, and the kind of video work you need."></textarea>
+                    <p class="field-error" data-error-for="brief"></p>
+                </div>
+
+                <div class="field">
+                    <label for="requirement">What do you need from us? <span class="req">*</span></label>
+                    <div class="select-wrap">
+                        <!-- mirrors the six work categories in js/design.js — keep in sync -->
+                        <select id="requirement" name="requirement" required>
+                            <option value="" disabled selected>Select a category</option>
+                            <option>CGI Commercials</option>
+                            <option>SaaS Videos</option>
+                            <option>Motion Graphics</option>
+                            <option>MG + Compilation</option>
+                            <option>AI Videos</option>
+                            <option>Advanced Compilation</option>
+                            <option>Multiple categories</option>
+                            <option>Not sure yet — need advice</option>
+                        </select>
+                    </div>
+                    <p class="field-error" data-error-for="requirement"></p>
+                </div>
+
+                <div class="field-row">
+                    <div class="field">
+                        <label for="name">Your name <span class="req">*</span></label>
+                        <input type="text" id="name" name="name" autocomplete="name" required />
+                        <p class="field-error" data-error-for="name"></p>
+                    </div>
+                    <div class="field">
+                        <label for="designation">Designation <span class="req">*</span></label>
+                        <input type="text" id="designation" name="designation" autocomplete="organization-title" required />
+                        <p class="field-error" data-error-for="designation"></p>
+                    </div>
+                </div>
+
+                <div class="field-row">
+                    <div class="field">
+                        <label for="contact">Contact no. <span class="req">*</span></label>
+                        <input type="tel" id="contact" name="contact" autocomplete="tel" inputmode="tel"
+                            placeholder="+91 00000 00000" required />
+                        <p class="field-error" data-error-for="contact"></p>
+                    </div>
+                    <div class="field">
+                        <label for="source">Where did you hear about us? <span class="req">*</span></label>
+                        <div class="select-wrap">
+                            <select id="source" name="source" required>
+                                <option value="" disabled selected>Select an option</option>
+                                <option>Instagram</option>
+                                <option>LinkedIn</option>
+                                <option>Google search</option>
+                                <option>Referral from a partner</option>
+                                <option>Existing client</option>
+                                <option>Upwork / Fiverr</option>
+                                <option>Event or conference</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                        <p class="field-error" data-error-for="source"></p>
+                    </div>
+                </div>
+
+                <!-- honeypot: bots fill it, humans never see it -->
+                <div class="hp" aria-hidden="true">
+                    <label for="website">Website</label>
+                    <input type="text" id="website" name="website" tabindex="-1" autocomplete="off" />
+                </div>
+
+                <button type="submit" class="btn btn-gold btn-lg book-submit" id="book-submit">Book a Call</button>
+
+                <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
+            </form>
+
+            <!-- ---- aside ---- -->
+            <aside class="book-aside reveal">
+                <p class="aside-title">What happens next</p>
+                <ol class="aside-steps">
+                    <li>
+                        <span class="step-n">01</span>
+                        <p><b>We read the brief.</b> No discovery call to explain what you already wrote here.</p>
+                    </li>
+                    <li>
+                        <span class="step-n">02</span>
+                        <p><b>We reply within one business day</b> with a time slot and a short questions list.</p>
+                    </li>
+                    <li>
+                        <span class="step-n">03</span>
+                        <p><b>You get a quote per project</b> — no retainers, no minimums, nothing to sign up front.</p>
+                    </li>
+                </ol>
+
+                <p class="aside-note">Prefer to skip the form?</p>
+                <a class="btn btn-line btn-sm" href="https://wa.me/919116538867" target="_blank" rel="noopener">Message us on WhatsApp</a>
+
+                <p class="aside-fine">We're a studio, not an agency — we never contact or compete for your clients.</p>
+            </aside>
+        </div>
+    </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="footer">
+    <div class="container footer-inner">
+        <a href="index.html#top" class="brand">
+            <img src="assets/Logo.webp" alt="Design Dynamo" class="brand-mark" width="200" height="200" decoding="async" />
+            <span class="brand-name">Design Dynamo</span>
+        </a>
+        <p class="footer-tag">Creativity in every pixel</p>
+        <div class="footer-links">
+            <a href="mailto:studio@thedesigndynamo.com">studio@thedesigndynamo.com</a>
+            <a href="https://wa.me/919116538867" target="_blank" rel="noopener">WhatsApp</a>
+            <a href="https://www.instagram.com/the_design_dynamo/" target="_blank" rel="noopener">Instagram</a>
+        </div>
+    </div>
+    <p class="footer-bar">© 2026 The Design Dynamo. All rights reserved.</p>
+</footer>
+
+<script src="js/book.js"></script>
+</body>
+</html>

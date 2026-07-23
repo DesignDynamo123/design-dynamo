@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# The booking form is noindex — no value in search results, and it keeps
+# crawlers out of a page whose only purpose is submitting a lead.
+Disallow: /book.html
+
+Sitemap: https://thedesigndynamo.com/sitemap.xml

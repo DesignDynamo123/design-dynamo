@@ -498,11 +498,26 @@ function renderWorkReel(catId) {
     const works = WORKS.filter((w) => w.category === catId);
     if (!cat || !works.length) return;
 
+    /* Custom controls instead of the browser's native bar, whose white chrome
+       (with its own menu/PiP/cast affordances) fought the design. Only what's
+       needed: centre play, mute toggle, scrubber, fullscreen. */
     workReel.innerHTML = works.map((w) => `
         <div class="wcard">
             <div class="wthumb ${w.orientation === "landscape" ? "landscape" : ""}">
                 <video muted playsinline ${videoAttrs(w)} src="${cloudSrc(w)}"></video>
-                <span class="wplay">▶</span>
+                <span class="wplay" aria-hidden="true">
+                    <svg viewBox="0 0 18 22" width="15" height="18" fill="currentColor"><path d="M0 0l18 11L0 22V0z"/></svg>
+                </span>
+                <div class="vctrl">
+                    <button class="vbtn v-mute" type="button" aria-label="Unmute">
+                        <svg class="ic-muted" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H3v6h3l5 4V5z"/><path d="M17 9l4 6M21 9l-4 6"/></svg>
+                        <svg class="ic-loud" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H3v6h3l5 4V5z"/><path d="M15.5 8.5a5 5 0 010 7M18 6a8.5 8.5 0 010 12"/></svg>
+                    </button>
+                    <div class="vbar" role="slider" tabindex="0" aria-label="Seek"><i></i></div>
+                    <button class="vbtn v-full" type="button" aria-label="Fullscreen">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6"/><path d="M20 4L9.5 14.5"/></svg>
+                    </button>
+                </div>
             </div>
             <div class="wtitle">${w.title}</div>
             <div class="wsub">${cat.label}</div>
@@ -510,14 +525,49 @@ function renderWorkReel(catId) {
 
     workReel.querySelectorAll(".wthumb").forEach((thumb) => {
         const v = thumb.querySelector("video");
-        thumb.addEventListener("click", () => {
-            if (v.paused) {
-                v.muted = false; v.controls = true; v.play().catch(() => {});
-                thumb.classList.add("playing");
-            } else { v.pause(); }
+        const bar = thumb.querySelector(".vbar");
+        const fill = bar.querySelector("i");
+        const muteBtn = thumb.querySelector(".v-mute");
+        const fullBtn = thumb.querySelector(".v-full");
+
+        /* tap the video itself to play/pause; taps on the control bar don't count */
+        thumb.addEventListener("click", (e) => {
+            if (e.target.closest(".vctrl")) return;
+            if (v.paused) { v.muted = false; v.play().catch(() => {}); }
+            else { v.pause(); }
         });
-        v.addEventListener("pause", () => thumb.classList.remove("playing"));
         v.addEventListener("play", () => thumb.classList.add("playing"));
+        v.addEventListener("pause", () => thumb.classList.remove("playing"));
+        v.addEventListener("ended", () => thumb.classList.remove("playing"));
+
+        const syncMute = () => {
+            thumb.classList.toggle("muted", v.muted);
+            muteBtn.setAttribute("aria-label", v.muted ? "Unmute" : "Mute");
+        };
+        muteBtn.addEventListener("click", () => { v.muted = !v.muted; syncMute(); });
+        v.addEventListener("volumechange", syncMute);
+        syncMute();
+
+        v.addEventListener("timeupdate", () => {
+            if (v.duration) fill.style.width = (v.currentTime / v.duration) * 100 + "%";
+        });
+        /* pointer events (not click) so dragging scrubs continuously */
+        const seek = (clientX) => {
+            const r = bar.getBoundingClientRect();
+            const ratio = Math.min(Math.max((clientX - r.left) / r.width, 0), 1);
+            if (v.duration) { v.currentTime = ratio * v.duration; fill.style.width = ratio * 100 + "%"; }
+        };
+        let scrubbing = false;
+        bar.addEventListener("pointerdown", (e) => { scrubbing = true; bar.setPointerCapture(e.pointerId); seek(e.clientX); });
+        bar.addEventListener("pointermove", (e) => { if (scrubbing) seek(e.clientX); });
+        bar.addEventListener("pointerup", (e) => { scrubbing = false; bar.releasePointerCapture(e.pointerId); });
+
+        fullBtn.addEventListener("click", () => {
+            // iOS Safari exposes only the proprietary video-element API
+            if (document.fullscreenElement) document.exitFullscreen();
+            else if (thumb.requestFullscreen) thumb.requestFullscreen().catch(() => {});
+            else if (v.webkitEnterFullscreen) v.webkitEnterFullscreen();
+        });
     });
     workReel.scrollLeft = 0;
 

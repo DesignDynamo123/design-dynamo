@@ -113,6 +113,36 @@ const WORKS = [
     { title: "Advanced Compilation 02", category: "advanced", orientation: "portrait", cloud: V2 + "Comp_2.mp4" },
 ];
 
+/* ---------- Hero trust-bar marquee (mobile) ----------
+   Clone the 7 partner logos once so the strip can scroll continuously with no
+   seam. Copies carry .logo-dup — hidden on desktop (static row) and revealed
+   inside the phone marquee via CSS. Runs at all widths; harmless on desktop
+   because the clones stay display:none there. */
+(function cloneTrustbar() {
+    const bar = document.querySelector(".hero-partners .trustbar-logos");
+    if (!bar) return;
+    const originals = bar.querySelectorAll(".logo-item").length;   // 7, snapshot before cloning
+    bar.querySelectorAll(".logo-item").forEach((img) => {
+        const copy = img.cloneNode(true);
+        copy.classList.add("logo-dup");
+        copy.setAttribute("aria-hidden", "true");
+        bar.appendChild(copy);
+    });
+    // Exact loop distance = left offset of the first clone = width of one full set
+    // (logos + trailing margins). Fixed-width logos, so this is viewport-independent;
+    // only meaningful under the phone layout, so measure when the marquee is active.
+    const setShift = () => {
+        if (!window.matchMedia("(max-width: 900px)").matches) return;
+        const firstDup = bar.children[originals];
+        if (firstDup && firstDup.offsetLeft > 0) {
+            bar.style.setProperty("--marquee-to", "-" + Math.round(firstDup.offsetLeft) + "px");
+        }
+    };
+    setShift();
+    window.addEventListener("resize", setShift, { passive: true });
+    window.addEventListener("load", setShift);   // re-measure once images have their box
+})();
+
 /* ---------- Hero filmstrip (duplicated for a seamless loop) ---------- */
 const strip = document.getElementById("filmstrip");
 
@@ -497,14 +527,26 @@ selectCategory = function (catId, preferredWork) {
 };
 renderWorkReel(CATEGORIES[0].id);
 
-/* ----- H · sticky action dock: reveal only after the hero scrolls away ----- */
+/* ----- H · sticky action dock -----
+   A mid-page shortcut, so it's hidden at both ends: while the hero is in view
+   (its own CTA is right there) and again over the final CTA + footer, whose
+   "Message via WhatsApp" / "Book" buttons and contact links carry the same actions
+   and would otherwise sit directly under the dock. */
 const dock = document.getElementById("dock");
 const heroTop = document.querySelector(".hero-top");
 if (dock && heroTop && "IntersectionObserver" in window) {
-    new IntersectionObserver(([entry]) => {
-        dock.classList.toggle("show", !entry.isIntersecting);
-        dock.setAttribute("aria-hidden", entry.isIntersecting);
-    }, { threshold: 0 }).observe(heroTop);
+    const cta = document.querySelector(".cta");
+    const footer = document.querySelector(".footer");
+    const seen = new Map();
+    const io = new IntersectionObserver((entries) => {
+        entries.forEach((e) => seen.set(e.target, e.isIntersecting));
+        const heroInView = seen.get(heroTop);
+        const bottomInView = seen.get(cta) || seen.get(footer);
+        const show = !heroInView && !bottomInView;
+        dock.classList.toggle("show", show);
+        dock.setAttribute("aria-hidden", String(!show));
+    }, { threshold: 0 });
+    [heroTop, cta, footer].filter(Boolean).forEach((el) => io.observe(el));
 }
 
 

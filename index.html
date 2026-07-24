@@ -68,9 +68,14 @@
         <a class="btn btn-gold btn-sm nav-cta" href="https://wa.me/919116538867?text=Hi%2C%20Design%20Dynamo%2C" target="_blank" rel="noopener">Message via WhatsApp</a>
         <button class="nav-burger" id="nav-burger" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
     </div>
-    <!-- Full-screen mobile drawer (wireframe A). display:none on desktop via .nav-mobile;
-         the burger toggles .open. Restructured internals are mobile-only by construction. -->
-    <nav class="nav-mobile" id="nav-mobile" aria-label="Mobile">
+</header>
+
+<!-- Full-screen mobile drawer (wireframe A). display:none on desktop; the burger
+     toggles .open. MUST stay outside <header class="nav">: that element gets
+     backdrop-filter when scrolled, which makes it the containing block for
+     position:fixed descendants, collapsing this drawer to the 68px nav height.
+     At body level it also layers above the sticky dock. -->
+<nav class="nav-mobile" id="nav-mobile" aria-label="Mobile">
         <div class="nav-mobile-head">
             <span class="nav-mobile-brand"><img src="assets/Logo.webp" alt="" width="200" height="200" decoding="async" />Design Dynamo</span>
             <button class="nav-mobile-close" id="nav-close" aria-label="Close menu">✕</button>
@@ -88,8 +93,7 @@
                 <a href="https://www.instagram.com/the_design_dynamo/" target="_blank" rel="noopener">Instagram</a>
             </p>
         </div>
-    </nav>
-</header>
+</nav>
 
 <!-- ============ 2 · HERO ============ -->
 <section class="hero" id="top">

@@ -31,8 +31,13 @@
         <a class="btn btn-line btn-sm nav-cta" href="index.html#top">← Back to site</a>
         <button class="nav-burger" id="nav-burger" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
     </div>
-    <!-- Full-screen mobile drawer, matching index.html (wireframe A). -->
-    <nav class="nav-mobile" id="nav-mobile" aria-label="Mobile">
+</header>
+
+<!-- Full-screen mobile drawer, matching index.html (wireframe A). MUST stay outside
+     <header class="nav">: this page carries .scrolled permanently, so its
+     backdrop-filter would make the header the containing block for this
+     position:fixed drawer and collapse it to the 68px nav height. -->
+<nav class="nav-mobile" id="nav-mobile" aria-label="Mobile">
         <div class="nav-mobile-head">
             <span class="nav-mobile-brand"><img src="assets/Logo.webp" alt="" width="200" height="200" decoding="async" />Design Dynamo</span>
             <button class="nav-mobile-close" id="nav-close" aria-label="Close menu">✕</button>
@@ -50,8 +55,7 @@
                 <a href="https://www.instagram.com/the_design_dynamo/" target="_blank" rel="noopener">Instagram</a>
             </p>
         </div>
-    </nav>
-</header>
+</nav>
 
 <!-- ============ BOOKING ============ -->
 <section class="section book-section">

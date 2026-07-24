@@ -6,6 +6,15 @@
 /* JS is active — enables the reveal-on-scroll hidden state in CSS. */
 document.documentElement.classList.add("js");
 
+/* Casual-download deterrent: block right-click "Save video as…" on any <video>,
+   including ones injected later (delegated on document, capture phase). This only
+   removes the easy path — the file still travels over the network to play, so it
+   remains reachable via the browser's Network tab. True protection needs signed,
+   expiring Cloudinary URLs, which is a server-side change. */
+document.addEventListener("contextmenu", (e) => {
+    if (e.target instanceof HTMLVideoElement) e.preventDefault();
+}, true);
+
 /* ---------- Cloudinary delivery ----------
    All video AND thumbnail bytes come from Cloudinary (cloud: dfvot5men) —
    the host serves only code/design files. Each work has a `cloud` field:
@@ -28,12 +37,15 @@ function cloudPoster(work) {
         .replace("/upload/", "/upload/so_1,q_auto/")
         .replace(/\.[a-z0-9]+(\?.*)?$/i, ".jpg");
 }
-/* videos with a Cloudinary poster never preload media; local ones need metadata for a frame */
+/* videos with a Cloudinary poster never preload media; local ones need metadata for a frame.
+   NODL removes the native download button, PiP, and remote-playback — casual-download
+   deterrents only; the file is still reachable via the Network tab (see contextmenu guard). */
+const NODL = 'controlslist="nodownload noremoteplayback" disablepictureinpicture';
 function videoAttrs(work) {
     const poster = cloudPoster(work);
     return poster
-        ? `preload="none" poster="${poster}"`
-        : `preload="metadata"`;
+        ? `preload="none" poster="${poster}" ${NODL}`
+        : `preload="metadata" ${NODL}`;
 }
 
 /* ---------- Hero background video ----------

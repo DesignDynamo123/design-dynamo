@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Design Dynamo — White-Label Video Production Studio for Marketing Agencies</title>
 <meta name="description" content="Design Dynamo is a white-label video production studio for marketing agencies: motion graphics, CGI commercials, AI videos and edits. Below-market pricing, dedicated QC, up to 8 videos shipped daily — under your agency's name." />
-<meta name="keywords" content="white-label video production, video editing for agencies, motion graphics studio, CGI commercials, AI video, outsource video editing, agency video partner" />
 <meta name="author" content="Design Dynamo" />
 <meta name="robots" content="index, follow" />
 <link rel="canonical" href="https://thedesigndynamo.com/" />
@@ -28,24 +27,82 @@
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&family=Instrument+Serif:ital@1&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="css/design.css" />
 
-<!-- Structured data: helps search engines understand the business -->
+<!-- Structured data: business entity + website + FAQ (mirrors the on-page FAQ,
+     which Google requires to match). Update the FAQ node if the FAQ copy changes. -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "ProfessionalService",
-  "name": "Design Dynamo",
-  "description": "White-label video production studio for marketing agencies — motion graphics, CGI commercials, AI videos and edits with dedicated quality control.",
-  "url": "https://thedesigndynamo.com/",
-  "email": "studio@thedesigndynamo.com",
-  "sameAs": ["https://www.instagram.com/the_design_dynamo/"],
-  "slogan": "The studio behind great agencies.",
-  "areaServed": "Worldwide",
-  "serviceType": [
-    "White-label video production",
-    "Motion graphics",
-    "CGI commercials",
-    "AI video production",
-    "Video editing for marketing agencies"
+  "@graph": [
+    {
+      "@type": "ProfessionalService",
+      "@id": "https://thedesigndynamo.com/#studio",
+      "name": "Design Dynamo",
+      "description": "White-label video production studio for marketing agencies — motion graphics, CGI commercials, AI videos and edits with dedicated quality control.",
+      "url": "https://thedesigndynamo.com/",
+      "email": "studio@thedesigndynamo.com",
+      "telephone": "+91-91165-38867",
+      "logo": "https://thedesigndynamo.com/assets/Logo.webp",
+      "image": "https://thedesigndynamo.com/assets/bg.webp",
+      "priceRange": "$$",
+      "sameAs": ["https://www.instagram.com/the_design_dynamo/"],
+      "slogan": "The studio behind great agencies.",
+      "areaServed": "Worldwide",
+      "serviceType": [
+        "White-label video production",
+        "Motion graphics",
+        "CGI commercials",
+        "AI video production",
+        "Video editing for marketing agencies"
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://thedesigndynamo.com/#website",
+      "url": "https://thedesigndynamo.com/",
+      "name": "Design Dynamo",
+      "publisher": { "@id": "https://thedesigndynamo.com/#studio" }
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://thedesigndynamo.com/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How do we send you a brief?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Through WhatsApp or Notion — whichever fits your team's workflow." }
+        },
+        {
+          "@type": "Question",
+          "name": "What's your delivery capacity?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Up to 3 high-end motion graphics and 5 basic ad videos — every single day." }
+        },
+        {
+          "@type": "Question",
+          "name": "How does pricing work?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Per-project — every job gets a mutually agreed quote before work starts. No retainers, no minimums." }
+        },
+        {
+          "@type": "Question",
+          "name": "What if we're not happy with a delivery?",
+          "acceptedAnswer": { "@type": "Answer", "text": "We rework it. Revision requests are accepted up to 3 days after the first draft is delivered." }
+        },
+        {
+          "@type": "Question",
+          "name": "Are you really white-label?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes. Your name goes on the work, and we never contact your clients — we're a studio, not a competing agency." }
+        },
+        {
+          "@type": "Question",
+          "name": "Can you handle bulk volumes?",
+          "acceptedAnswer": { "@type": "Answer", "text": "That's what the pipeline is built for — specialized creatives per format plus a QC layer that doesn't slip when volume grows." }
+        },
+        {
+          "@type": "Question",
+          "name": "Who owns the files?",
+          "acceptedAnswer": { "@type": "Answer", "text": "The final deliverables are fully yours. The working project files stay with Design Dynamo." }
+        }
+      ]
+    }
   ]
 }
 </script>

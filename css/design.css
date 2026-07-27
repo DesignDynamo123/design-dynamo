@@ -1,10 +1,11 @@
 /* ============================================================
    Design Dynamo — design.css · "Cinematic Editorial"
    Flat filmic black · one champagne-gold accent.
-   Type system — "Precision System" (Apple scale + Linear neutrality):
-     · Display  → Inter Tight (oversized, tight tracking — premium via scale, not personality)
-     · Body     → Inter
-     · Meta     → JetBrains Mono (numbers, labels, kickers)
+   Type system:
+     · Display  → Poppins (headings — premium via scale, tight tracking)
+     · Body     → Poppins
+     · Labels   → Geist (numbers, labels, kickers, buttons, chips)
+     · Accent   → Instrument Serif (italic emphasis words)
    Layout: left-aligned, numbered sections, work bleeds to the edge,
    rhythm contrast between dense and spacious. No centered templates.
    ============================================================ */
@@ -22,10 +23,11 @@
     --gold-grad: linear-gradient(135deg, #f0d078 0%, #e3c566 50%, #c9a227 100%);
     --gold-ink: #1c1503;
     --r: 12px;
-    --font-display: "Inter Tight", "Inter", sans-serif;
-    --font-body: "Inter", sans-serif;
-    --font-mono: "JetBrains Mono", ui-monospace, monospace;
-    --font-geist: "Geist", "Inter", sans-serif;   /* numbered section labels */
+    --font-display: "Poppins", sans-serif;
+    --font-body: "Poppins", sans-serif;
+    /* --font-mono kept as a token name for the label/button text, now Geist (not monospace) */
+    --font-mono: "Geist", "Poppins", sans-serif;
+    --font-geist: "Geist", "Poppins", sans-serif;
     --nav-h: 68px;
     --edge: clamp(1.25rem, 5vw, 4rem);   /* page side gutter */
 }

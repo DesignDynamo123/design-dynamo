@@ -25,6 +25,7 @@
     --font-display: "Inter Tight", "Inter", sans-serif;
     --font-body: "Inter", sans-serif;
     --font-mono: "JetBrains Mono", ui-monospace, monospace;
+    --font-geist: "Geist", "Inter", sans-serif;   /* numbered section labels */
     --nav-h: 68px;
     --edge: clamp(1.25rem, 5vw, 4rem);   /* page side gutter */
 }
@@ -69,7 +70,7 @@ h1 em, h2 em {
     display: inline-flex;
     align-items: center;
     gap: 0.75rem;
-    font-family: var(--font-mono);
+    font-family: var(--font-geist);
     font-size: 0.74rem;
     font-weight: 500;
     text-transform: uppercase;

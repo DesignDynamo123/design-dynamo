@@ -125,6 +125,39 @@ const WORKS = [
     { title: "Advanced Compilation 02", category: "advanced", orientation: "portrait", cloud: V2 + "Comp_2.mp4" },
 ];
 
+/* ---------- VideoObject structured data (SEO) ----------
+   Emitted from the same WORKS list that renders the showcase, so the schema can
+   never drift from what's actually on the page. Injected as JSON-LD into <head>.
+   uploadDate is the real Cloudinary upload time, read from the version stamp
+   (/v<unix>/) in each URL; the one version-less asset falls back to the known
+   batch date. Consistent with the videos themselves being JS-rendered — if
+   Google renders enough to see the gallery, it sees this too. */
+(function videoSchema() {
+    const catOf = (id) => CATEGORIES.find((c) => c.id === id) || {};
+    const BATCH_DATE = "2026-07-17"; // version-less assets (e.g. Comp_1) — same upload batch
+    const uploadDate = (url) => {
+        const m = /\/v(\d{9,})\//.exec(url);
+        return m ? new Date(+m[1] * 1000).toISOString().slice(0, 10) : BATCH_DATE;
+    };
+    const videos = WORKS.map((w) => {
+        const cat = catOf(w.category);
+        const src = cloudSrc(w);
+        return {
+            "@type": "VideoObject",
+            "name": `${w.title} — ${cat.label || "Video"} · Design Dynamo`,
+            "description": cat.desc || "White-label video production by Design Dynamo.",
+            "thumbnailUrl": cloudPoster(w),
+            "contentUrl": src,
+            "uploadDate": uploadDate(src),
+            "publisher": { "@type": "Organization", "name": "Design Dynamo", "@id": "https://thedesigndynamo.com/#studio" }
+        };
+    });
+    const ld = document.createElement("script");
+    ld.type = "application/ld+json";
+    ld.textContent = JSON.stringify({ "@context": "https://schema.org", "@graph": videos });
+    document.head.appendChild(ld);
+})();
+
 /* ---------- Hero trust-bar marquee (mobile) ----------
    Clone the 7 partner logos once so the strip can scroll continuously with no
    seam. Copies carry .logo-dup — hidden on desktop (static row) and revealed

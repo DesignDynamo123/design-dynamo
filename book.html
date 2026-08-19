@@ -3,6 +3,10 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
+<!-- Security: content policy + referrer. connect-src allows the Apps Script
+     endpoint the booking form posts to. HSTS / X-Frame-Options belong at the host. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://res.cloudinary.com; media-src 'self' https://res.cloudinary.com; connect-src 'self' https://script.google.com https://script.googleusercontent.com; form-action 'self'" />
+<meta name="referrer" content="strict-origin-when-cross-origin" />
 <title>Book a Call — Design Dynamo</title>
 <meta name="description" content="Book a call with Design Dynamo — the white-label video production studio behind great agencies. Tell us about your company and we'll get back within one business day." />
 <meta name="robots" content="noindex, follow" />

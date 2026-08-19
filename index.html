@@ -3,6 +3,12 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
+<!-- Security: content policy + referrer. Sources are exactly what the site uses —
+     self, Google Fonts, Cloudinary media, and the Apps Script booking endpoint.
+     HSTS, X-Frame-Options and frame-ancestors can't be set via <meta>; add those
+     as response headers at the host (see README / Render dashboard). -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://res.cloudinary.com; media-src 'self' https://res.cloudinary.com; connect-src 'self' https://script.google.com https://script.googleusercontent.com; form-action 'self'" />
+<meta name="referrer" content="strict-origin-when-cross-origin" />
 <title>Design Dynamo — White-Label Video Production Studio for Marketing Agencies</title>
 <meta name="description" content="Design Dynamo is a white-label video production studio for marketing agencies: motion graphics, CGI commercials, AI videos and edits. Below-market pricing, dedicated QC, up to 8 videos shipped daily — under your agency's name." />
 <meta name="author" content="Design Dynamo" />
@@ -176,7 +182,7 @@
             <a class="btn btn-gold" href="https://wa.me/919116538867?text=Hi%2C%20Design%20Dynamo%2C" target="_blank" rel="noopener">Message via WhatsApp</a>
             <a class="btn btn-line" href="#work">See the Work</a>
         </div>
-        <p class="hero-trust reveal">We're a studio, not an agency — we never compete for your clients.</p>
+        <p class="hero-trust reveal">A white-label video production studio for marketing agencies — we never compete for your clients.</p>
         </div>
 
         <div class="hero-partners reveal">

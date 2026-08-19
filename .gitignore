@@ -4,3 +4,7 @@ Thumbs.db
 
 # Design source / reference — kept locally, not deployed (Render serves repo root)
 dd-mobile-wireframe.html
+
+# Documents must never be served from the static root (Render serves everything).
+# The SEO audit in particular maps the site's weaknesses — keep it out of the deploy.
+*.docx

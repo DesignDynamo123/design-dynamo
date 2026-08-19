@@ -120,6 +120,8 @@ const WORKS = [
     { title: "AI Video 01", category: "ai", orientation: "portrait", cloud: V2 + "Ai_1.mp4" },
     { title: "AI Video 02", category: "ai", orientation: "portrait", cloud: V2 + "Ai_2.mp4" },
     { title: "AI Video 03", category: "ai", orientation: "portrait", cloud: V2 + "Ai_3.mp4" },
+    // Ai_4 was uploaded later under its own version, and is landscape (1920x1080) unlike the others
+    { title: "AI Video 04", category: "ai", orientation: "landscape", cloud: "https://res.cloudinary.com/dfvot5men/video/upload/v1787155426/Ai_4.mp4" },
     // Comp_1 was re-uploaded under a new version — bare public ID resolves version-less to the latest upload
     { title: "Advanced Compilation 01", category: "advanced", orientation: "portrait", cloud: "Comp_1" },
     { title: "Advanced Compilation 02", category: "advanced", orientation: "portrait", cloud: V2 + "Comp_2.mp4" },

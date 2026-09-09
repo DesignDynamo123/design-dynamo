@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<!-- /careers is a redirect stub: it forwards to the Google Forms careers
+     application. A meta-refresh handles browsers with JS disabled; the inline
+     script redirects immediately when JS is on. Redirecting away is a top-level
+     navigation, so the site CSP (connect-src/form-action) does not apply here. -->
+<meta http-equiv="refresh" content="0; url=https://forms.gle/d6Mxjnh9SYnxmAbF6" />
+<meta name="referrer" content="strict-origin-when-cross-origin" />
+<title>Careers — Design Dynamo</title>
+<meta name="description" content="Join Design Dynamo — apply through our careers form." />
+<meta name="robots" content="noindex, follow" />
+<link rel="icon" type="image/png" href="/assets/favicon.png" />
+<style>
+    html, body { margin: 0; height: 100%; }
+    body {
+        display: flex; align-items: center; justify-content: center;
+        min-height: 100%; padding: 24px; box-sizing: border-box;
+        background: #0b0b0d; color: #f4f4f5;
+        font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        text-align: center; line-height: 1.5;
+    }
+    .wrap { max-width: 420px; }
+    h1 { font-size: 1.35rem; font-weight: 600; margin: 0 0 .5rem; }
+    p { margin: 0 0 1.25rem; color: #a1a1aa; font-size: .95rem; }
+    a.btn {
+        display: inline-block; padding: .7rem 1.4rem; border-radius: 999px;
+        background: #e9b949; color: #0b0b0d; font-weight: 600; text-decoration: none;
+    }
+    a.btn:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+</style>
+</head>
+<body>
+    <main class="wrap">
+        <h1>Taking you to our careers form…</h1>
+        <p>If you're not redirected automatically, use the button below.</p>
+        <a class="btn" href="https://forms.gle/d6Mxjnh9SYnxmAbF6">Open the careers form</a>
+    </main>
+    <script>
+        // Immediate redirect for JS-enabled browsers. replace() keeps this stub
+        // out of history so Back returns to wherever the visitor came from.
+        window.location.replace("https://forms.gle/d6Mxjnh9SYnxmAbF6");
+    </script>
+</body>
+</html>
